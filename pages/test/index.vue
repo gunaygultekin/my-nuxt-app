@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 500px; margin: 0 auto">
+  <div style="width: 90%; margin: 0 auto">
     <el-row>
       <el-col :span="14" :offset="6">
         <span>TEST - FIELD TO INPUT AN ADDRESS</span>
@@ -45,13 +45,13 @@
           </el-button>
         </el-tooltip>
       </el-form-item>
-      <FormItem :form="form.address"></FormItem>
-      <el-form-item
-        class="plus-buton"
-        @click="click"
-        v-if="form.address.value !== null"
-      >
-        <font-awesome-icon icon="plus" class="font-icon" />
+      <FormItem
+        v-for="(item, index) in form.items"
+        :key="index"
+        :item="item"
+      ></FormItem>
+      <el-form-item v-if="isShow" class="plus-buton">
+        <font-awesome-icon icon="plus" class="font-icon" @click="click" />
       </el-form-item>
     </el-form>
   </div>
@@ -59,6 +59,17 @@
 
 <script>
 import FormItem from '@/components/FormItem'
+
+// street, house number, zip code, town, major town, country and also the GPS (geographical) coordinates
+const itemMap = new Map([
+  [1, 'Number'],
+  [2, 'Zip Code'],
+  [3, 'Town'],
+  [4, 'Major Town'],
+  [5, 'Country'],
+  [6, 'GPS Coordinate'],
+])
+
 export default {
   name: 'Test',
   components: {
@@ -68,12 +79,10 @@ export default {
     return {
       form: {
         type: null,
-        address: {
-          value: null,
-          label: 'Address',
-        },
+        items: [],
       },
       isHover: false,
+      isPlusButtonShowed: false,
       options: [
         {
           value: 'residential',
@@ -96,6 +105,28 @@ export default {
       // questionInfo: 'Usefull Tooltip Content',
     }
   },
+  computed: {
+    isShow() {
+      const { items } = this.form
+      let isAllFilled = false
+      if (items.length <= itemMap.size) {
+        items.forEach((item) => {
+          if (Boolean(item.value) === true) {
+            // it is not empty
+            isAllFilled = true
+          } else isAllFilled = false
+        })
+      }
+      return isAllFilled
+    },
+  },
+  created() {
+    // add default address field
+    this.form.items.push({
+      label: 'Address',
+      value: null,
+    })
+  },
   mounted() {
     this.type = this.options[0].value // set the first item as default
   },
@@ -105,7 +136,30 @@ export default {
       else this.isHover = true
     },
     click() {
-      // add new line
+      const mapIndex = this.form.items.length
+      const itemText = itemMap.get(mapIndex)
+      this.form.items.push({
+        label: itemText,
+        value: null,
+      })
+
+      /* const { items } = this.form
+      const mapIndex = items.length
+      const itemText = itemMap.get(mapIndex)
+      items.push({
+        label: itemText,
+        value: null,
+      })
+
+      this.isPlusButtonShowed = false // clear
+      if (items.length <= itemMap.size) {
+        items.forEach((item) => {
+          if (Boolean(item.value) === true) {
+            // it is not empty
+            this.isPlusButtonShowed = true
+          }
+        })
+      } */
     },
   },
 }

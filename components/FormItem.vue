@@ -1,14 +1,14 @@
 <template>
   <el-form-item class="form-item">
     <el-input
-      v-model="form.value"
+      v-model="item.value"
       class="input-with-select"
-      :placeholder="form.label"
+      :placeholder="item.label"
       clearable
       @clear="clear"
     />
     <el-divider content-position="right" class="labelText">{{
-      form.label
+      item.label
     }}</el-divider>
   </el-form-item>
 </template>
@@ -16,14 +16,14 @@
 export default {
   name: 'FormItem',
   props: {
-    form: {
+    item: {
       type: Object,
       default: () => {},
     },
   },
   methods: {
     clear() {
-      this.form.value = null
+      this.item.value = null
     },
   },
 }
