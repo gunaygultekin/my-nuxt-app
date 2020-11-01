@@ -7,7 +7,7 @@
     </el-row>
     <el-form :inline="true" :model="form">
       <el-form-item>
-        <el-select v-model="form.addressType" placeholder="Select">
+        <el-select v-model="form.type" placeholder="Select">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -18,7 +18,7 @@
         </el-select>
         <el-divider content-position="right" class="labelText"></el-divider>
       </el-form-item>
-      <el-form-item style="margin-top: 15px">
+      <el-form-item class="question">
         <el-tooltip
           class="question-tooltip"
           effect="dark"
@@ -45,29 +45,33 @@
           </el-button>
         </el-tooltip>
       </el-form-item>
-      <el-form-item>
-        <el-input
-          v-model="form.searchText"
-          class="input-with-select"
-          placeholder="Address"
-          clearable
-        />
-        <el-divider content-position="right" class="labelText"
-          >address</el-divider
-        >
+      <FormItem :form="form.address"></FormItem>
+      <el-form-item
+        class="plus-buton"
+        @click="click"
+        v-if="form.address.value !== null"
+      >
+        <font-awesome-icon icon="plus" class="font-icon" />
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
+import FormItem from '@/components/FormItem'
 export default {
   name: 'Test',
+  components: {
+    FormItem,
+  },
   data() {
     return {
       form: {
-        addressType: null,
-        searchText: '',
+        type: null,
+        address: {
+          value: null,
+          label: 'Address',
+        },
       },
       isHover: false,
       options: [
@@ -93,12 +97,15 @@ export default {
     }
   },
   mounted() {
-    this.addressType = this.options[0].value // set the first item as default
+    this.type = this.options[0].value // set the first item as default
   },
   methods: {
     handleMouseOver() {
       if (this.questionInfo === null) this.isHover = false
       else this.isHover = true
+    },
+    click() {
+      // add new line
     },
   },
 }
@@ -114,31 +121,6 @@ body {
   }
   .el-col {
     border-radius: 4px;
-  }
-}
-.el-input__inner {
-  background-color: var(--color-black);
-  color: var(--color-white);
-  border-color: var(--color-black);
-  &:focus,
-  &:hover {
-    border-color: var(--color-black) !important;
-  }
-  &::placeholder {
-    color: var(--color-text-secondary);
-  }
-}
-.el-select {
-  &:hover {
-    color: var(--color-black);
-  }
-  .el-input {
-    width: 130px;
-    &.is-focus {
-      .el-input__inner {
-        border-color: var(--color-black);
-      }
-    }
   }
 }
 .el-select-dropdown {
@@ -194,6 +176,20 @@ body {
 .el-popper[x-placement^='bottom'] {
   .popper__arrow {
     display: none;
+  }
+}
+.el-form-item {
+  &.question {
+    margin-top: 15px;
+  }
+  &.plus-buton {
+    margin-top: 15px;
+    &:hover {
+      cursor: pointer;
+    }
+    .font-icon {
+      color: var(--color-white);
+    }
   }
 }
 </style>
