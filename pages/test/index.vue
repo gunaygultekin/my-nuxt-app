@@ -16,6 +16,34 @@
           >
           </el-option>
         </el-select>
+        <el-divider content-position="right" class="labelText"></el-divider>
+      </el-form-item>
+      <el-form-item style="margin-top: 15px">
+        <el-tooltip
+          class="question-tooltip"
+          effect="dark"
+          :content="questionInfo"
+          placement="bottom-start"
+          :disabled="questionInfo === null"
+        >
+          <el-button>
+            <font-awesome-icon
+              :disabled="questionInfo === null"
+              :icon="
+                isHover && questionInfo !== null
+                  ? 'question-circle'
+                  : 'question'
+              "
+              :class="
+                isHover && questionInfo !== null
+                  ? 'question-icon-activated'
+                  : 'question-icon'
+              "
+              @mouseover="handleMouseOver"
+              @mouseleave="isHover = false"
+            />
+          </el-button>
+        </el-tooltip>
       </el-form-item>
       <el-form-item>
         <el-input
@@ -41,6 +69,7 @@ export default {
         addressType: null,
         searchText: '',
       },
+      isHover: false,
       options: [
         {
           value: 'residential',
@@ -59,10 +88,18 @@ export default {
           label: 'Operational',
         },
       ],
+      questionInfo: null,
+      // questionInfo: 'Usefull Tooltip Content',
     }
   },
   mounted() {
     this.addressType = this.options[0].value // set the first item as default
+  },
+  methods: {
+    handleMouseOver() {
+      if (this.questionInfo === null) this.isHover = false
+      else this.isHover = true
+    },
   },
 }
 </script>
@@ -75,9 +112,9 @@ body {
   &:last-child {
     margin-bottom: 0;
   }
-}
-.el-col {
-  border-radius: 4px;
+  .el-col {
+    border-radius: 4px;
+  }
 }
 .el-input__inner {
   background-color: var(--color-black);
@@ -85,37 +122,42 @@ body {
   border-color: var(--color-black);
   &:focus,
   &:hover {
-    border-color: var(--color-black);
+    border-color: var(--color-black) !important;
   }
   &::placeholder {
     color: var(--color-text-secondary);
   }
 }
-.el-select .el-input {
-  width: 130px;
-}
-.input-with-select .el-input-group__prepend {
-  background-color: var(--color-black);
-  border-color: var(--color-black);
+.el-select {
+  &:hover {
+    color: var(--color-black);
+  }
+  .el-input {
+    width: 130px;
+    &.is-focus {
+      .el-input__inner {
+        border-color: var(--color-black);
+      }
+    }
+  }
 }
 .el-select-dropdown {
   border: 0px solid var(--color-black);
-
   background-color: var(--color-black);
-}
-.el-select-dropdown__list {
-  background: var(--color-text-regular);
-  .el-select-dropdown__item {
-    background-color: var(--color-text-regular);
-    color: var(---color-text-secondary);
-    :hover,
-    &.hover {
-      background-color: var(--border-color-base);
-      color: var(--color-black);
-    }
-
-    &.selected {
+  &__list {
+    background: var(--color-dropdown-gray);
+    .el-select-dropdown__item {
+      background-color: var(--color-dropdown-gray);
       color: var(--color-white);
+      :hover,
+      &.hover {
+        background-color: var(--border-color-base);
+        color: var(--color-black);
+      }
+
+      &.selected {
+        color: var(--color-white);
+      }
     }
   }
 }
@@ -123,7 +165,6 @@ body {
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
 }
-
 .labelText {
   text-transform: uppercase;
   margin-top: -5px;
@@ -133,6 +174,26 @@ body {
     color: var(--color-white);
     padding: 0 3px;
     line-height: 17px;
+  }
+}
+.question-icon {
+  color: var(--color-text-primary);
+  &-activated {
+    color: var(--color-text-regular);
+  }
+}
+.question-tooltip {
+  color: transparent !important;
+  background-color: transparent !important;
+  border: 0;
+  padding: 0;
+}
+:focus {
+  outline: var(--color-black);
+}
+.el-popper[x-placement^='bottom'] {
+  .popper__arrow {
+    display: none;
   }
 }
 </style>

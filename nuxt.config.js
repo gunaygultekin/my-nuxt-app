@@ -23,6 +23,14 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
+    ['nuxt-fontawesome', {
+      imports: [
+        {
+          set: '@fortawesome/free-solid-svg-icons',
+          icons: ['fas']
+        },
+      ]
+    }]
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
