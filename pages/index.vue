@@ -21,6 +21,9 @@
           GitHub
         </a>
       </div>
+      <div class="links">
+        <nuxt-link :to="'/test'"> Test Page</nuxt-link>
+      </div>
     </div>
   </div>
 </template>
