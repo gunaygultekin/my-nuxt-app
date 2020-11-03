@@ -18,8 +18,10 @@ module.exports = {
   // add your custom rules here
   rules: {
     'no-console': [
-      "warn",
-      { "allow": ["clear", "info", "error", "dir", "trace", "log"] }
-    ]
+      'warn',
+      {
+        allow: ['clear', 'info', 'error', 'dir', 'trace', 'log'],
+      },
+    ],
   },
 }

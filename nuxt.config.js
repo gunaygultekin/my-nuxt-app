@@ -42,37 +42,36 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxtjs/proxy'
+    '@nuxtjs/proxy',
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
-    proxy: true
+    proxy: true,
   },
 
   proxy: {
     '/gapi/': {
       target: 'https://maps.googleapis.com/',
       pathRewrite: {
-        '^/gapi/': '/'
+        '^/gapi/': '/',
       },
-      changeOrigin: true
+      changeOrigin: true,
     },
   },
-
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
     transpile: [/^element-ui/],
-    extend: function (config, { isDev, isClient }) {
+    extend: (config, { isDev, isClient }) => {
       config.node = {
-        fs: "empty"
-      };
-    }
+        fs: 'empty',
+      }
+    },
   },
 
   // Take Google API key from environment file
   env: {
     googleMapAPIKey: process.env.GOOGLE_MAPS_API_KEY,
-  }
+  },
 }
