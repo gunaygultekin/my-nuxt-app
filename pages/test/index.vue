@@ -45,6 +45,7 @@
           </el-button>
         </el-tooltip>
       </el-form-item>
+      <AutoComplete @handleSelect="handleSelect"></AutoComplete>
       <FormItem
         v-for="(item, index) in form.items"
         :key="index"
@@ -59,6 +60,7 @@
 
 <script>
 import FormItem from '@/components/FormItem'
+import AutoComplete from '@/components/AutoComplete'
 
 // street, house number, zip code, town, major town, country and also the GPS (geographical) coordinates
 const itemMap = new Map([
@@ -74,6 +76,7 @@ export default {
   name: 'Test',
   components: {
     FormItem,
+    AutoComplete,
   },
   data() {
     return {
@@ -128,7 +131,7 @@ export default {
     })
   },
   mounted() {
-    this.type = this.options[0].value // set the first item as default
+    this.form.type = this.options[0].value // set the first item as default
   },
   methods: {
     handleMouseOver() {
@@ -160,6 +163,9 @@ export default {
           }
         })
       } */
+    },
+    handleSelect(p) {
+      console.info(p)
     },
   },
 }
