@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 90%; margin: 0 auto">
+  <div style="width: 95%; margin: 0 auto">
     <el-row>
       <el-col :span="14" :offset="6">
         <span>TEST - FIELD TO INPUT AN ADDRESS</span>
@@ -45,13 +45,16 @@
           </el-button>
         </el-tooltip>
       </el-form-item>
-      <AutoComplete @handleSelect="handleSelect"></AutoComplete>
+      <AutoComplete
+        :searchText="searchText"
+        @handleSelect="handleSelect"
+      ></AutoComplete>
       <FormItem
-        v-for="(item, index) in form.items"
-        :key="index"
-        :item="item"
+        v-if="form.item !== null"
+        :item="form.item"
+        @change="handleChange"
       ></FormItem>
-      <el-form-item v-if="isShow" class="plus-buton">
+      <el-form-item v-if="isPlusButtonShowed" class="plus-buton">
         <font-awesome-icon icon="plus" class="font-icon" @click="click" />
       </el-form-item>
     </el-form>
@@ -64,12 +67,12 @@ import AutoComplete from '@/components/AutoComplete'
 
 // street, house number, zip code, town, major town, country and also the GPS (geographical) coordinates
 const itemMap = new Map([
-  [1, 'Number'],
-  [2, 'Zip Code'],
-  [3, 'Town'],
-  [4, 'Major Town'],
-  [5, 'Country'],
-  [6, 'GPS Coordinate'],
+  [0, 'N⁰'],
+  [1, 'Zip Code'],
+  [2, 'Town'],
+  [3, 'Major Town'],
+  [4, 'Country'],
+  [5, 'GPS Coordinate'],
 ])
 
 export default {
@@ -82,8 +85,9 @@ export default {
     return {
       form: {
         type: null,
-        items: [],
+        item: null,
       },
+      searchText: null,
       isHover: false,
       isPlusButtonShowed: false,
       options: [
@@ -106,6 +110,7 @@ export default {
       ],
       questionInfo: null,
       // questionInfo: 'Usefull Tooltip Content',
+      additionalEntryIndex: 0,
     }
   },
   computed: {
@@ -123,13 +128,6 @@ export default {
       return isAllFilled
     },
   },
-  created() {
-    // add default address field
-    this.form.items.push({
-      label: 'Address',
-      value: null,
-    })
-  },
   mounted() {
     this.form.type = this.options[0].value // set the first item as default
   },
@@ -139,33 +137,23 @@ export default {
       else this.isHover = true
     },
     click() {
-      const mapIndex = this.form.items.length
-      const itemText = itemMap.get(mapIndex)
-      this.form.items.push({
+      this.isPlusButtonShowed = false
+      const itemText = itemMap.get(this.additionalEntryIndex)
+      this.form.item = {
         label: itemText,
         value: null,
-      })
-
-      /* const { items } = this.form
-      const mapIndex = items.length
-      const itemText = itemMap.get(mapIndex)
-      items.push({
-        label: itemText,
-        value: null,
-      })
-
-      this.isPlusButtonShowed = false // clear
-      if (items.length <= itemMap.size) {
-        items.forEach((item) => {
-          if (Boolean(item.value) === true) {
-            // it is not empty
-            this.isPlusButtonShowed = true
-          }
-        })
-      } */
+      }
+      this.additionalEntryIndex += 1
     },
     handleSelect(p) {
-      console.info(p)
+      this.isPlusButtonShowed = true
+      const { value } = p
+      this.searchText = value
+    },
+    handleChange(p) {
+      this.isPlusButtonShowed = false
+      this.searchText = p + ',' + this.searchText
+      this.form.item = null
     },
   },
 }

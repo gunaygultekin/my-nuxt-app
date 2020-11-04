@@ -2,10 +2,10 @@
   <el-form-item class="form-item">
     <el-input
       v-model="item.value"
-      class="input-with-select"
       :placeholder="item.label"
       clearable
       @clear="clear"
+      @change="(p) => $emit('change', p)"
     />
     <el-divider content-position="right" class="labelText">{{
       item.label

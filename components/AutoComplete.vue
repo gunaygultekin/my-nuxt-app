@@ -1,12 +1,12 @@
 <template>
   <el-form-item class="form-item">
     <el-autocomplete
+      ref="autocomplete"
       v-model="predictions"
       class="input-with-select"
       placeholder="Address"
       :fetch-suggestions="querySearchAsync"
-      :trigger-on-focus="false"
-      :minlength="3"
+      :trigger-on-focus="triggerOnFocus"
       clearable
       @clear="clear"
       @select="handleSelect"
@@ -17,10 +17,29 @@
 <script>
 export default {
   name: 'FormItem',
+  props: {
+    searchText: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       predictions: '',
+      triggerOnFocus: false,
     }
+  },
+  watch: {
+    searchText: {
+      immediate: true,
+      handler(value) {
+        if (value) {
+          this.predictions = value
+          this.triggerOnFocus = true
+          this.$refs.autocomplete.focus()
+        }
+      },
+    },
   },
   methods: {
     clear() {
@@ -32,6 +51,7 @@ export default {
           `/gapi/maps/api/place/autocomplete/json?input=${queryString}&key=${process.env.googleMapAPIKey}`
         )
         .then((res) => {
+          this.triggerOnFocus = false
           const { predictions } = res
           cb(
             predictions.map((p) => ({
@@ -47,35 +67,8 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-.el-input__inner {
-  background-color: var(--color-black);
-  color: var(--color-white);
-  border-color: var(--color-black);
-  &:focus,
-  &:hover {
-    border-color: var(--color-black) !important;
-  }
-  &::placeholder {
-    color: var(--color-text-secondary);
-  }
-}
-.el-select {
-  &:hover {
-    color: var(--color-black);
-  }
-  .el-input {
-    width: 130px;
-    &.is-focus {
-      .el-input__inner {
-        border-color: var(--color-black);
-      }
-    }
-  }
-}
-.el-form-item {
-  &.form-item {
-    margin-right: 2px;
-  }
+<style lang="scss" scoped>
+.input-with-select {
+  width: 450px;
 }
 </style>
