@@ -47,7 +47,9 @@
       </el-form-item>
       <AutoComplete
         :searchText="searchText"
-        @handleSelect="handleSelect"
+        @select="handleSelect"
+        @mouseover="handleSelect"
+        @clear="handleClear"
       ></AutoComplete>
       <FormItem
         v-if="form.item !== null"
@@ -154,6 +156,9 @@ export default {
       this.isPlusButtonShowed = false
       this.searchText = p + ',' + this.searchText
       this.form.item = null
+    },
+    handleClear() {
+      this.searchText = ''
     },
   },
 }

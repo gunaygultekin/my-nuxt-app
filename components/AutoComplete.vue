@@ -9,12 +9,15 @@
       :trigger-on-focus="triggerOnFocus"
       clearable
       @clear="clear"
-      @select="handleSelect"
+      @select="select"
+      @mouseover="mouseover"
     />
     <el-divider content-position="right" class="labelText">Address</el-divider>
   </el-form-item>
 </template>
 <script>
+import { Message } from 'element-ui'
+
 export default {
   name: 'FormItem',
   props: {
@@ -27,6 +30,7 @@ export default {
     return {
       predictions: '',
       triggerOnFocus: false,
+      isCleared: false,
     }
   },
   watch: {
@@ -38,13 +42,14 @@ export default {
           this.triggerOnFocus = true
           this.$refs.autocomplete.focus()
         }
+        if (this.isCleared) {
+          console.log('do this')
+          this.isCleared = false
+        }
       },
     },
   },
   methods: {
-    clear() {
-      this.predictions = ''
-    },
     querySearchAsync(queryString, cb) {
       this.$axios
         .$get(
@@ -60,9 +65,24 @@ export default {
             }))
           )
         })
+        .catch((error) => {
+          Message({
+            message: error,
+            type: 'warning',
+            duration: 5 * 1000,
+          })
+        })
     },
-    handleSelect(item) {
-      this.$emit('handleSelect', item)
+    select(p) {
+      this.$emit('select', p)
+    },
+    clear() {
+      this.isCleared = true
+      this.$emit('clear')
+      this.$refs.autocomplete.$el.blur()
+    },
+    mouseover(p) {
+      this.$emit('mouseover', this.predictions)
     },
   },
 }
