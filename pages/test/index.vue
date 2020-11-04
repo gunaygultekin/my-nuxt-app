@@ -46,7 +46,7 @@
         </el-tooltip>
       </el-form-item>
       <AutoComplete
-        :searchText="searchText"
+        :search-text="searchText"
         @select="handleSelect"
         @mouseover="handleSelect"
         @clear="handleClear"
